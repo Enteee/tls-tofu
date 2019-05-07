@@ -13,6 +13,7 @@ $ docker run \
 
 | Variable | Description | Mandatory | Default |
 | -------- | ----------- | :-------: | ------- |
+| `TLS_TOFU` | Enable TLS-TOFU | No | `true` |
 | `TLS_TOFU_HOST` | Host to do TLS-TOFU with | No | `google.com` |
 | `TLS_TOFU_PORT` | Port on host | No | `443` |
 | `TLS_TOFU_S_CLIENT_ARGS` | Additional arguments for `openssl s_client` | No | `-servername ${TLS_TOFU_HOST}` |
