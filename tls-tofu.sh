@@ -22,10 +22,10 @@ function destroy_kamikaze(){
 }
 trap "destroy_kamikaze" EXIT
 
-# DEBUG: Enable debug output, default: false
-[ ! -z ${TLS_TOFU_DEBUG+x} ] && set -x
-
 if [ "${TLS_TOFU}" = "true" ]; then
+
+  # DEBUG: Enable debug output, default: false
+  [ ! -z ${TLS_TOFU_DEBUG+x} ] && set -x
 
   s_client_args="-connect "${TLS_TOFU_HOST}:${TLS_TOFU_PORT}" ${TLS_TOFU_S_CLIENT_ARGS}"
   if [ ! -z "${*}" ]; then
