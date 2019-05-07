@@ -1,0 +1,21 @@
+FROM alpine:latest
+
+# Install kamikaze
+RUN set -exuo pipefail \
+  && apk add \
+    curl \
+  && curl https://raw.githubusercontent.com/Enteee/kamikaze/master/install.sh | sh \
+  && apk del \
+    curl
+
+# Install tls-tofu
+RUN set -exuo pipefail \
+  && apk add \
+    openssl
+
+COPY \
+  entrypoint.sh \
+  tls-tofu.sh \
+  /
+
+ENTRYPOINT ["/entrypoint.sh"]
