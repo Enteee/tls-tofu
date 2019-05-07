@@ -4,9 +4,7 @@ FROM alpine:latest
 RUN set -exuo pipefail \
   && apk add \
     curl \
-  && curl https://raw.githubusercontent.com/Enteee/kamikaze/master/install.sh | sh \
-  && apk del \
-    curl
+  && curl https://raw.githubusercontent.com/Enteee/kamikaze/master/install.sh | sh
 
 # Install tls-tofu
 RUN set -exuo pipefail \
@@ -19,3 +17,4 @@ COPY \
   /
 
 ENTRYPOINT ["/entrypoint.sh"]
+CMD ["sh"]
