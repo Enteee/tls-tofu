@@ -12,9 +12,9 @@ RUN set -exuo pipefail \
     openssl
 
 COPY \
-  entrypoint.sh \
+  tls-tofu-entrypoint.sh \
   tls-tofu.sh \
   /
 
-ENTRYPOINT ["/entrypoint.sh"]
+ENTRYPOINT ["/tls-tofu-entrypoint.sh"]
 CMD ["sh"]
