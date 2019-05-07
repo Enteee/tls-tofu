@@ -1,31 +1,34 @@
 #!/usr/bin/env sh
-set -euo pipefail
+set -eo pipefail
 # Trust On First Use (TOFU) for TLS certificates.
 #
-# Synopsis:
-#   tls-tofu <openssl s_client arguments>
-#
-# Example usage:
-#   tls-tofu -connect localhost:8081 -servername duckpond.ch
-#
 # Environment:
+#   Host to do tls-tofu with
+TLS_TOFU_HOST="${TLS_TOFU_HOST:-"google.com"}"
+#   Port on host
+TLS_TOFU_PORT="${TLS_TOFU_PORT:-"443"}"
+#   Additional arguments for openssl s_client
+TLS_TOFU_S_CLIENT_ARGS="${TLS_TOFU_S_CLIENT_ARGS:-"-servername ${TLS_TOFU_HOST}"}"
 #   Path to the kamikaze binary
-KAMIKAZE_BIN="${KAMIKAZE_BIN:-/kamikaze}"
+TLS_TOFU_KAMIKAZE_BIN="${TLS_TOFU_KAMIKAZE_BIN:-/kamikaze}"
 #   Path to the ca-certificates file
-CA_CERTIFICATES="${CA_CERTIFICATES:-/etc/ssl/certs/ca-certificates.crt}"
+TLS_TOFU_CA_CERTIFICATES="${TLS_TOFU_CA_CERTIFICATES:-/etc/ssl/certs/ca-certificates.crt}"
 
 # DEBUG: Enable debug output, default: false
-[ ! -z ${DEBUG+x} ] && set -x
+[ ! -z ${TLS_TOFU_DEBUG+x} ] && set -x
 
-# Ensure that the kamikaze binary is destroyed when we leave this subshell
-trap "[ -x "${KAMIKAZE_BIN}" ] && "${KAMIKAZE_BIN}" true" EXIT
+# Ensure that the kamikaze binary is destroyed when we exit
+trap "[ -x "${TLS_TOFU_KAMIKAZE_BIN}" ] && "${TLS_TOFU_KAMIKAZE_BIN}" true" EXIT
 
+s_client_args="-connect "${TLS_TOFU_HOST}:${TLS_TOFU_PORT}" ${TLS_TOFU_S_CLIENT_ARGS}"
 if [ ! -z "${*}" ]; then
-  if ! openssl s_client -verify_return_error ${@} &>/dev/null < /dev/null; then
+  if ! openssl s_client -verify_return_error ${s_client_args} &>/dev/null < /dev/null; then
     # Only install certificates if the initial verification failed
-    openssl s_client -showcerts ${@} 2>/dev/null < /dev/null \
+    openssl s_client -showcerts ${s_client_args} 2>/dev/null < /dev/null \
     | tee /dev/tty \
     | sed -n '/-----BEGIN/,/-----END/p' \
-    | "${KAMIKAZE_BIN}" tee -a "${CA_CERTIFICATES}" > /dev/null
+    | "${TLS_TOFU_KAMIKAZE_BIN}" tee -a "${TLS_TOFU_CA_CERTIFICATES}" > /dev/null
   fi
 fi
+
+exec sh -c "${*}"

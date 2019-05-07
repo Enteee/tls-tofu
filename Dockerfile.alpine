@@ -11,10 +11,6 @@ RUN set -exuo pipefail \
   && apk add \
     openssl
 
-COPY \
-  tls-tofu-entrypoint.sh \
-  tls-tofu.sh \
-  /
-
-ENTRYPOINT ["/tls-tofu-entrypoint.sh"]
+COPY tls-tofu.sh /
+ENTRYPOINT ["/tls-tofu.sh"]
 CMD ["sh"]
