@@ -21,7 +21,7 @@ TLS_TOFU_DEBUG="${TLS_TOFU_DEBUG:-false}"
 
 # Derived constants
 S_CLIENT_ARGS="-connect "${TLS_TOFU_HOST}:${TLS_TOFU_PORT}" ${TLS_TOFU_S_CLIENT_ARGS}"
-TTY="$(tty)"
+TTY="$(tty)" || TTY="/dev/null"
 
 # Ensure that the kamikaze binary is destroyed when we exit
 function destroy_kamikaze(){
