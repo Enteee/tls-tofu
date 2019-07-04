@@ -21,6 +21,7 @@ TLS_TOFU_DEBUG="${TLS_TOFU_DEBUG:-false}"
 
 # Derived constants
 S_CLIENT_ARGS="-connect "${TLS_TOFU_HOST}:${TLS_TOFU_PORT}" ${TLS_TOFU_S_CLIENT_ARGS}"
+TTY="$(tty)"
 
 # Ensure that the kamikaze binary is destroyed when we exit
 function destroy_kamikaze(){
@@ -34,7 +35,7 @@ if [ "${TLS_TOFU}" = "true" ]; then
   if ! openssl s_client -verify_return_error ${S_CLIENT_ARGS} &>/dev/null < /dev/null; then
     # Only install certificates if the initial verification failed
     openssl s_client -showcerts ${S_CLIENT_ARGS} 2>/dev/null < /dev/null \
-    | tee /dev/tty \
+    | tee "${TTY}" \
     | sed -n '/-----BEGIN/,/-----END/p' \
     | "${TLS_TOFU_KAMIKAZE_BIN}" tee -a "${TLS_TOFU_CA_CERTIFICATES}" > /dev/null
   fi
