@@ -1,4 +1,4 @@
-# tls-tofu
+# tls-tofu [![GitHub Workflow Status (branch)](https://img.shields.io/github/workflow/status/Enteee/tls-tofu/Build/master)](https://github.com/Enteee/tls-tofu) [![Docker Pulls](https://img.shields.io/docker/pulls/enteee/tls-tofu)](https://hub.docker.com/r/enteee/tls-tofu)
 _Docker images implementing Transport Layer Security (TLS) -  Trust On First Use (TOFU)_
 
 ## Usage
